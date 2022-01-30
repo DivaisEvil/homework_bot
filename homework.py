@@ -48,7 +48,8 @@ def send_message(bot, message):
 
 
 def get_api_answer(current_timestamp):
-    # переменная в котором настоящее время 
+    """Api запрос к практикуму."""
+    # переменная в котором настоящее время
     timestamp = current_timestamp or int(time.time())
     params = {'from_date': timestamp}
     try:
@@ -73,7 +74,7 @@ def check_response(response):
     """Проверка вернувшегося ответа от практикума."""
     if len(response) == 0:
         raise Exception('Ответ пришел пустой')
-    # isinstance проверка типа значения первого аргумента 
+    # isinstance проверка типа значения первого аргумента
     if isinstance(response, list):
         response = response[0]
 
@@ -104,7 +105,7 @@ def parse_status(homework):
 
 def check_tokens():
     """Проверка токенов."""
-    # общая проверка наличия парамметров 
+    # общая проверка наличия парамметров
     if not all([PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID]):
         logging.critical('Отсутствует обязательная переменная окружения: '
                          'PRACTICUM_TOKEN '
