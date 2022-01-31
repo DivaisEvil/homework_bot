@@ -12,6 +12,8 @@ load_dotenv()
 
 logging.basicConfig(
     level=logging.DEBUG,
+    filename='main.log',
+    filemode='a',
     format='%(asctime)s, %(levelname)s, %(message)s'
 )
 logger = logging.getLogger(__name__)
@@ -106,9 +108,19 @@ def parse_status(homework):
 def check_tokens():
     """Проверка токенов."""
     # общая проверка наличия парамметров
-    if not all([PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID]):
+    if not all([PRACTICUM_TOKEN]):
         logging.critical('Отсутствует обязательная переменная окружения: '
                          'PRACTICUM_TOKEN '
+                         'Программа принудительно остановлена.')
+        return False
+    if not all([TELEGRAM_TOKEN]):
+        logging.critical('Отсутствует обязательная переменная окружения: '
+                         'TELEGRAM_TOKEN '
+                         'Программа принудительно остановлена.')
+        return False
+    if not all([TELEGRAM_CHAT_ID]):
+        logging.critical('Отсутствует обязательная переменная окружения: '
+                         'TELEGRAM_CHAT_ID '
                          'Программа принудительно остановлена.')
         return False
 
@@ -120,7 +132,8 @@ def main():
     # Создание бота
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     if not check_tokens():
-        return
+        # не знаю что написать
+        raise Exception('Ошибка в работе check_tokens ')
     status = ''
     while True:
         try:
@@ -138,6 +151,8 @@ def main():
             message = f'Сбой в работе программы: {error}'
             send_message(bot, message)
             logging.info('Сообщение о ошибке отправлено')
+            # вроде как тут должна подставитьса сама ошибка
+            # в зависимости от места где сработает
             logging.exception('Ошибка:')
         else:
             status = message
